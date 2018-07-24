@@ -1,5 +1,48 @@
+:root {
+  --main-font-stack: 'IBM Plex Sans', sans-serif;
+}
+
 body {
-  margin: 0;
+  color: #222;
+  background: #f4f4f4;
+  font: 400 16px var(--main-font-stack);
+}
+
+a {
+  color: #222;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+ul, li {
+  list-style: none;
   padding: 0;
-  font-family: sans-serif;
+  margin: 0;
+}
+
+input {
+  padding: 10px;
+  border-radius: 5px;
+  outline: none;
+  margin-right: 10px;
+  border: 1px solid #dddddd;
+}
+
+button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #aaa;
+  background: transparent;
+  cursor: pointer;
+  font-family: var(--main-font-stack);
+}
+
+button:hover {
+  border-color: #222;
+}
+
+*:focus {
+  outline: none;
 }
