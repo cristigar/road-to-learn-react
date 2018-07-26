@@ -1,19 +1,22 @@
-import React, { Component } from "react";
-import "./App.css";
-import Search from "./Search";
-import Table from "./Table";
-import Button from "./Button/Button";
+import React, { Component } from 'react';
+import './App.css';
+import Search from './Search';
+import Table from './Table';
+import Button from './Button/Button';
+import axios from 'axios';
 
-const DEFAULT_QUERY = "redux";
+const DEFAULT_QUERY = 'redux';
 const DEFAULT_HPP = 100;
 
-const PATH_BASE = "https://hn.algolia.com/api/v1";
-const PATH_SEARCH = "/search";
-const PARAM_SEARCH = "query=";
-const PARAM_PAGE = "page=";
-const PARAM_HPP = "hitsPerPage=";
+const PATH_BASE = 'https://hn.algolia.com/api/v1';
+const PATH_SEARCH = '/search';
+const PARAM_SEARCH = 'query=';
+const PARAM_PAGE = 'page=';
+const PARAM_HPP = 'hitsPerPage=';
 
 class App extends Component {
+  _isMounted = false;
+
   constructor(props) {
     super(props);
 
@@ -64,19 +67,22 @@ class App extends Component {
   };
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
-    fetch(
-      `${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`
-    )
-      .then(response => response.json())
-      .then(result => this.setSearchTopStories(result))
-      .catch(error => this.setState({ error }));
+    axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
+      .then(result => this._isMounted && this.setSearchTopStories(result.data))
+      .catch(error => this._isMounted && this.setState({ error }));
   };
 
   componentDidMount() {
+    this._isMounted = true;
+
     const { searchTerm } = this.state;
     this.setState({ searchKey: searchTerm});
 
     this.fetchSearchTopStories(searchTerm);
+  }
+
+  componentWillUnmount() {
+    this._isMounted = false;
   }
 
   needsToSearchTopStories = searchTerm => {
