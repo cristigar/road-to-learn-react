@@ -27,7 +27,7 @@ exports[`App has a valid snapshot 1`] = `
 
 exports[`Button has a valid snapshot 1`] = `
 <button
-  className={undefined}
+  className=""
   onClick={undefined}
   type="button"
 >
@@ -116,7 +116,7 @@ exports[`Table has a valid snapshot 1`] = `
       }
     >
       <a
-        href={undefined}
+        href="url1"
         target="_blank"
         title="Title"
       >
@@ -180,7 +180,7 @@ exports[`Table has a valid snapshot 1`] = `
       }
     >
       <a
-        href={undefined}
+        href="url2"
         target="_blank"
         title="Title"
       >

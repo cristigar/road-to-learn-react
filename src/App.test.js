@@ -58,9 +58,10 @@ describe('Button', () => {
 describe('Table', () => {
   const props = {
     list: [
-      {title: '1', author: '1', num_comments: 1, points: 2, objectID: 'y'},
-      {title: '2', author: '2', num_comments: 1, points: 2, objectID: 'z'},
-    ]
+      {title: '1', author: '1', num_comments: 1, points: 2, objectID: 'y', url: 'url1'},
+      {title: '2', author: '2', num_comments: 1, points: 2, objectID: 'z', url: 'url2'},
+    ],
+    onDismiss: () => {},
   };
 
   it('renders without crashing', () => {
