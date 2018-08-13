@@ -22,6 +22,16 @@ exports[`App has a valid snapshot 1`] = `
       </button>
     </form>
   </div>
+  <div>
+    Loading...
+  </div>
+  <div
+    className="interactions"
+  >
+    <div>
+      Loading...
+    </div>
+  </div>
 </div>
 `;
 

@@ -15,6 +15,14 @@ const PARAM_SEARCH = 'query=';
 const PARAM_PAGE = 'page=';
 const PARAM_HPP = 'hitsPerPage=';
 
+const withLoading = Component => ({isLoading, ...rest}) =>
+  isLoading
+    ? <Loading />
+    : <Component {...rest} />
+;
+
+const ButtonWithLoading = withLoading(Button);
+
 class App extends Component {
   _isMounted = false;
 
@@ -116,29 +124,29 @@ class App extends Component {
           </Search>
         </div>
         {
-          isLoading
-            ? <Loading/>
-            : error ? (
+          error ? (
+            <div className="interactions">
+              <p>Something went wrong!</p>
+            </div>
+          ) : (
+            <React.Fragment>
+              {
+                isLoading
+                  ? <Loading />
+                  : <Table list={list} onDismiss={this.onDismiss}/>
+              }
               <div className="interactions">
-                <p>Something went wrong!</p>
+                <ButtonWithLoading
+                  onClick={() =>
+                    this.fetchSearchTopStories(searchKey, page + 1)
+                  }
+                  isLoading={isLoading}
+                >
+                  More
+                </ButtonWithLoading>
               </div>
-            ) : (
-              results &&
-              results[searchKey] && (
-                <React.Fragment>
-                  <Table list={list} onDismiss={this.onDismiss}/>
-                  <div className="interactions">
-                    <Button
-                      onClick={() =>
-                        this.fetchSearchTopStories(searchKey, page + 1)
-                      }
-                    >
-                      More
-                    </Button>
-                  </div>
-                </React.Fragment>
-              )
-            )}
+            </React.Fragment>
+          )}
       </div>
     );
   }
