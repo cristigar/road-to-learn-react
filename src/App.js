@@ -3,6 +3,7 @@ import './App.css';
 import Search from './Search';
 import Table from './Table';
 import Button from './Button/Button';
+import Loading from './Loading';
 import axios from 'axios';
 
 const DEFAULT_QUERY = 'redux';
@@ -24,7 +25,8 @@ class App extends Component {
       results: null,
       searchKey: "",
       searchTerm: DEFAULT_QUERY,
-      error: null
+      error: null,
+      isLoading: false,
     };
   }
 
@@ -50,8 +52,9 @@ class App extends Component {
     this.setState({
       results: {
         ...results,
-        [searchKey]: { hits: updatedHits, page }
-      }
+        [searchKey]: { hits: updatedHits, page },
+      },
+      isLoading: false,
     });
   };
 
@@ -67,6 +70,7 @@ class App extends Component {
   };
 
   fetchSearchTopStories = (searchTerm, page = 0) => {
+    this.setState({ isLoading: true });
     axios(`${PATH_BASE}${PATH_SEARCH}?${PARAM_SEARCH}${searchTerm}&${PARAM_PAGE}${page}&${PARAM_HPP}${DEFAULT_HPP}`)
       .then(result => this._isMounted && this.setSearchTopStories(result.data))
       .catch(error => this._isMounted && this.setState({ error }));
@@ -90,7 +94,13 @@ class App extends Component {
   };
 
   render() {
-    const { searchTerm, searchKey, results, error } = this.state;
+    const {
+      searchTerm,
+      searchKey,
+      results,
+      error,
+      isLoading,
+    } = this.state;
     const page = (results && results[searchKey] && results.page) || 0;
     const list = (results && results[searchKey] && results[searchKey].hits) || [];
 
@@ -105,27 +115,30 @@ class App extends Component {
             Search
           </Search>
         </div>
-        {error ? (
-          <div className="interactions">
-            <p>Something went wrong!</p>
-          </div>
-        ) : (
-          results &&
-          results[searchKey] && (
-            <React.Fragment>
-              <Table list={list} onDismiss={this.onDismiss} />
+        {
+          isLoading
+            ? <Loading/>
+            : error ? (
               <div className="interactions">
-                <Button
-                  onClick={() =>
-                    this.fetchSearchTopStories(searchKey, page + 1)
-                  }
-                >
-                  More
-                </Button>
+                <p>Something went wrong!</p>
               </div>
-            </React.Fragment>
-          )
-        )}
+            ) : (
+              results &&
+              results[searchKey] && (
+                <React.Fragment>
+                  <Table list={list} onDismiss={this.onDismiss}/>
+                  <div className="interactions">
+                    <Button
+                      onClick={() =>
+                        this.fetchSearchTopStories(searchKey, page + 1)
+                      }
+                    >
+                      More
+                    </Button>
+                  </div>
+                </React.Fragment>
+              )
+            )}
       </div>
     );
   }
