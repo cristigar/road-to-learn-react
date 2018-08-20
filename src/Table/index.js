@@ -1,32 +1,23 @@
 import React from 'react';
-import Button from "./Button";
 import PropTypes from 'prop-types';
 
+import './index.css';
+
+import Button from "../Button/index";
+
 const Table = ({list, onDismiss}) => {
-  const largeColumn = {
-    width: '40%',
-  };
-
-  const midColumn = {
-    width: '30%',
-  };
-
-  const smallColumn = {
-    width: '10%',
-  };
-
   return (
     <div className="table">
       <div className="table-header">
-        <span style={largeColumn}>Title</span>
-        <span style={midColumn}>Author</span>
-        <span style={smallColumn}>Number of comments</span>
-        <span style={smallColumn}>Points</span>
-        <span style={smallColumn}>Action</span>
+        <span className="item-title-header">Title</span>
+        <span className="item-author-header">Author</span>
+        <span className="item-comments-header">Number of comments</span>
+        <span className="item-points-header">Points</span>
+        <span className="item-action-header">Action</span>
       </div>
       {list.map(item =>
         <div key={item.objectID} className="table-row">
-          <span style={largeColumn}>
+          <span className="item-title">
             <a
               href={item.url}
               title="Title"
@@ -36,24 +27,24 @@ const Table = ({list, onDismiss}) => {
             </a>
           </span>
           <span
-            style={midColumn}
             title="Author"
+            className="item-author"
           >
             {item.author}
           </span>
           <span
-            style={smallColumn}
             title="Number of comments"
+            className="item-comments"
           >
             {item.num_comments}
           </span>
           <span
-            style={smallColumn}
             title="Points"
+            className="item-points"
           >
             {item.points}
           </span>
-          <span style={smallColumn}>
+          <span className="item-dismiss">
             <Button
               onClick={() => onDismiss(item.objectID)}
               className="button-inline"

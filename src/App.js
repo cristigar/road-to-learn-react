@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
-import './App.css';
+import axios from 'axios';
+
 import Search from './Search';
 import Table from './Table';
-import Button from './Button/Button';
+import Button from './Button';
 import Loading from './Loading';
-import axios from 'axios';
+
+import './App.css';
 
 const DEFAULT_QUERY = 'redux';
 const DEFAULT_HPP = 100;
@@ -21,7 +23,7 @@ const withLoading = Component => ({isLoading, ...rest}) =>
     : <Component {...rest} />
 ;
 
-const ButtonWithLoading = withLoading(Button);
+const TableWithLoading = withLoading(Table);
 
 class App extends Component {
   _isMounted = false;
@@ -40,8 +42,12 @@ class App extends Component {
 
   onDismiss = objectID => {
     const isNotId = item => item.objectID !== objectID;
-    const updatedHits = this.state.result.hits.filter(isNotId);
-    this.setState({ result: { ...this.state.result, hits: updatedHits } });
+    const updatedHits = this.state.results[this.state.searchKey].hits.filter(isNotId);
+    this.setState({
+      results: {
+        [this.state.searchKey]: { ...this.state.results[this.state.searchKey], hits: updatedHits }
+      }
+    });
   };
 
   onSearchChange = event => {
@@ -130,20 +136,20 @@ class App extends Component {
             </div>
           ) : (
             <React.Fragment>
-              {
-                isLoading
-                  ? <Loading />
-                  : <Table list={list} onDismiss={this.onDismiss}/>
-              }
+              <TableWithLoading
+                list={list}
+                onDismiss={this.onDismiss}
+                isLoading={isLoading}
+              />
               <div className="interactions">
-                <ButtonWithLoading
-                  onClick={() =>
-                    this.fetchSearchTopStories(searchKey, page + 1)
-                  }
-                  isLoading={isLoading}
-                >
-                  More
-                </ButtonWithLoading>
+                {isLoading ||
+                  <Button
+                    onClick={() => this.fetchSearchTopStories(searchKey, page + 1)}
+                    isLoading={isLoading}
+                  >
+                    More...
+                  </Button>
+                }
               </div>
             </React.Fragment>
           )}
@@ -153,9 +159,3 @@ class App extends Component {
 }
 
 export default App;
-
-export {
-  Button,
-  Search,
-  Table,
-};
